@@ -1,0 +1,30 @@
+---
+ - name: postgresqlのパッケージをインストールする
+   apt: name={{ item }} state=present
+   with_items:
+      - postgresql
+      - python-psycopg2
+      - libpq-dev
+
+ - name: postgresqlの起動
+   service: name=postgresql state=started enabled=yes
+
+ - name: postgresqlにデータベースを作成する
+   postgresql_db:
+      name: "{{dbname}}"
+      encoding: "UTF-8"
+      login_user: postgres
+   sudo_user: postgres
+   sudo: yes
+
+ - name: postgresqlにユーザを作成する
+   postgresql_user:
+      db: "{{dbname}}"
+      name: "{{dbuser}}"
+      password: "{{dbpass}}"
+      priv: ALL
+      state: present
+      login_user: postgres
+   sudo_user: postgres
+   sudo: yes
+

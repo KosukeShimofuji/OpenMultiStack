@@ -1,0 +1,7 @@
+---
+hostname: 'OpenMultiStack.test'
+ansible_user: vagrant
+login_user: "kosuke"
+dbname: "django"
+dbuser: "django"
+dbpass: "django"

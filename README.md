@@ -19,5 +19,5 @@
  * https://remotestance.com/blog/1271/
  * http://qiita.com/nk_yohn3301/items/a68d8df18867e2c40449
  * https://www.conoha.jp/agreement/
-
+ * http://docs.openstack.org/ja/api/quick-start/content/index.html#authenticate
 
