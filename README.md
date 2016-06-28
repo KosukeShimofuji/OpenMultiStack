@@ -191,7 +191,12 @@ $ python manage.py runserver 0.0.0.0:8000
 
 http://openmultistack.test:8000/admin/
 
+ * 管理画面のインデックスページ
+
 ![django admin index](https://raw.githubusercontent.com/KosukeShimofuji/OpenMultiStack/image/django_admin_index.png)
+
+ * OpenStackAccountテーブルの編集ページ
+ 
 ![django admin openstackaccount edit page](https://raw.githubusercontent.com/KosukeShimofuji/OpenMultiStack/image/django_admin_edit_openstackaccount.png)
 
 # 参考文献
