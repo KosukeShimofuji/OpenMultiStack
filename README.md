@@ -37,6 +37,12 @@ $ pip install djangorestframework
 $ pip install django-filter 
 ```
 
+ * install openstack client
+
+```
+$ pip install python-openstackclient
+```
+
 ## Create Django project and app
 
 ```
@@ -208,5 +214,5 @@ http://openmultistack.test:8000/admin/
  * https://www.conoha.jp/agreement/
  * http://docs.openstack.org/ja/api/quick-start/content/index.html#authenticate
  * http://qiita.com/kimihiro_n/items/86e0a9e619720e57ecd8
-
+ * http://docs.openstack.org/ja/user-guide/sdk.html
 
