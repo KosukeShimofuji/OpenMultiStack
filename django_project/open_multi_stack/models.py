@@ -2,7 +2,7 @@ from django.db import models
 
 # Create your models here.
 
-class OpenStackAccount(models.Model):
+class open_stack_account(models.Model):
     username   = models.CharField(max_length=128)
     tenantname = models.CharField(max_length=128)
     tenant_id  = models.CharField(max_length=128)
