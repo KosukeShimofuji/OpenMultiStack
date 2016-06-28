@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import OpenStackAccount
+
+@admin.register(OpenStackAccount)
+class OpenStackAccount(admin.ModelAdmin):
+    pass
+
