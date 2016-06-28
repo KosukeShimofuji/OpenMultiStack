@@ -141,11 +141,11 @@ django=> \dt
  public   | django_content_type                 | テーブル | django
  public   | django_migrations                   | テーブル | django
  public   | django_session                      | テーブル | django
- public   | open_multi_stack_open_stack_account | テーブル | django
+ public   | open_multi_stack_openstackaccount | テーブル | django
 (11 行)
 
-django=> \d open_multi_stack_open_stack_account
-                                 テーブル "public.open_multi_stack_open_stack_account"
+django=> \d open_multi_stack_openstackaccount
+                                 テーブル "public.open_multi_stack_openstackaccount"
      列     |           型           |                                      修飾語
 ------------+------------------------+----------------------------------------------------------------------------------
  id         | integer                | not null default nextval('open_multi_stack_open_stack_account_id_seq'::regclass)
@@ -160,6 +160,38 @@ django=> \d open_multi_stack_open_stack_account
 インデックス:
     "open_multi_stack_open_stack_account_pkey" PRIMARY KEY, btree (id)
 ```
+
+## 管理画面からデータベースを編集できるようにする
+
+ * 管理アカウントの作成
+
+```
+$ python manage.py createsuperuser
+Username (leave blank to use 'kosuke'): admin
+Email address: kosuke.shimofuji@gmail.com
+Password:
+Password (again):
+Superuser created successfully.
+```
+
+ * 作成したアカウント情報
+
+```
+admin:KraddInkasEatUljOundirbagphidab5
+```
+
+ * 開発用サーバの起動
+
+```
+$ python manage.py runserver 0.0.0.0:8000
+```
+
+
+ * 管理画面へのアクセス
+
+http://openmultistack.test:8000/admin/
+
+
 
 # 参考文献
 
