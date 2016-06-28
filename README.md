@@ -71,9 +71,7 @@ $ tree
 
 ### open_stack_account 
 
-1レコードがopenstack clientのenvrcに相当するテーブルを作成する
-
- * [コミット](https://github.com/KosukeShimofuji/OpenMultiStack/commit/d970757c623110a24fe464186b0f33066cbff70c)
+ * [models.py](https://github.com/KosukeShimofuji/OpenMultiStack/blob/master/django_project/open_multi_stack/models.py)にモデルを定義していく。
 
 ### create migrate script 
 
@@ -120,6 +118,48 @@ Running migrations:
   Applying sessions.0001_initial... OK
 ```
 
+### 作成されたテーブルの確認
+
+```
+$ psql -h127.0.0.1 -Udjango
+ユーザ django のパスワード:
+psql (9.4.8)
+SSL接続(プロトコル: TLSv1.2, 暗号化方式: ECDHE-RSA-AES256-GCM-SHA384, ビット長: 256, 圧縮: オフ)
+"help" でヘルプを表示します.
+
+django=> \dt
+                         リレーションの一覧
+ スキーマ |                名前                 |    型    | 所有者
+----------+-------------------------------------+----------+--------
+ public   | auth_group                          | テーブル | django
+ public   | auth_group_permissions              | テーブル | django
+ public   | auth_permission                     | テーブル | django
+ public   | auth_user                           | テーブル | django
+ public   | auth_user_groups                    | テーブル | django
+ public   | auth_user_user_permissions          | テーブル | django
+ public   | django_admin_log                    | テーブル | django
+ public   | django_content_type                 | テーブル | django
+ public   | django_migrations                   | テーブル | django
+ public   | django_session                      | テーブル | django
+ public   | open_multi_stack_open_stack_account | テーブル | django
+(11 行)
+
+django=> \d open_multi_stack_open_stack_account
+                                 テーブル "public.open_multi_stack_open_stack_account"
+     列     |           型           |                                      修飾語
+------------+------------------------+----------------------------------------------------------------------------------
+ id         | integer                | not null default nextval('open_multi_stack_open_stack_account_id_seq'::regclass)
+ username   | character varying(128) | not null
+ tenantname | character varying(128) | not null
+ tenant_id  | character varying(128) | not null
+ password   | character varying(128) | not null
+ auth_url   | character varying(128) | not null
+ version    | character varying(128) | not null
+ status     | character varying(12)  | not null
+ provider   | character varying(128) | not null
+インデックス:
+    "open_multi_stack_open_stack_account_pkey" PRIMARY KEY, btree (id)
+```
 
 # 参考文献
 
