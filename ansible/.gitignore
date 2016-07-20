@@ -1,2 +1,3 @@
 .vagrant
-roles/login_user/files/login-key
+roles/login_user/files/login-key*
+
