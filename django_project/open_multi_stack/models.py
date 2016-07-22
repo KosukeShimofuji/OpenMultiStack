@@ -18,3 +18,6 @@ class Account(models.Model):
     status = models.CharField(choices=STATUS_SET, default=STATUS_AVAILABLE, max_length=12)
     provider    = models.CharField(max_length=128)
 
+    def __str__(self):
+        return self.tenantname + '_' + self.provider
+
