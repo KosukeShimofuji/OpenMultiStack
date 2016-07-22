@@ -21,8 +21,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
 ]
 
-urlpatterns = [
-    url(r'^$', views.index, name='index'),
-]
-
+#urlpatterns = [
+#    url(r'^$', views.index, name='index'),
+#]
 
