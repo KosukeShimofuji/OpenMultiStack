@@ -6,6 +6,10 @@ class AccountAdmin(admin.ModelAdmin):
             'auth_url', 'version', 'status']
     list_display = ('provider', 'username', 'tenantname', 'tenant_id')
 
+class InstanceAdmin(admin.ModelAdmin):
+    fields = ['account', 'name', 'ip_addr', 'username', 'password', 'key']
+    list_display = ('account', 'name', 'ip_addr')
+
 admin.site.register(Account, AccountAdmin)
 admin.site.register(Instance)
 
