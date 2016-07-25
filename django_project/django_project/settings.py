@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'open_multi_stack',
+    'kombu.transport.django',
+    'djcelery'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -124,3 +126,12 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# Settings for Celery
+import djcelery
+djcelery.setup_loader()
+BROKER_URL = 'django://'
+# Tasks will be executed asynchronously.
+CELERY_ALWAYS_EAGER = False
+CELERY_RESULT_BACKEND = 'db+postgresql://django:django@localhost/django'
+
