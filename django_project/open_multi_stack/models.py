@@ -8,7 +8,6 @@ class Account(models.Model):
     tenant_id  = models.CharField(max_length=128)
     password   = models.CharField(max_length=128)
     auth_url   = models.CharField(max_length=128)
-    version    = models.CharField(max_length=128)
     STATUS_AVAILABLE = "available"
     STATUS_UNAVAILABLE = "unavailable"
     STATUS_SET = (
@@ -32,5 +31,5 @@ class Instance(models.Model):
     account     = models.ForeignKey(Account)
 
     def __str__(self):
-        return self.name + '_' + self.ip + '_' + self.account
+        return self.name + '_' + self.ip_addr 
 

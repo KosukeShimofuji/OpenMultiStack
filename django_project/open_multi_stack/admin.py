@@ -2,8 +2,7 @@ from open_multi_stack.models import Account, Instance
 from django.contrib import admin
 
 class AccountAdmin(admin.ModelAdmin):
-    fields = ['provider', 'username', 'password', 'tenantname', 'tenant_id', 
-            'auth_url', 'version', 'status']
+    fields = ['provider', 'username', 'password', 'tenantname', 'tenant_id', 'auth_url', 'status']
     list_display = ('provider', 'username', 'tenantname', 'tenant_id')
 
 class InstanceAdmin(admin.ModelAdmin):
