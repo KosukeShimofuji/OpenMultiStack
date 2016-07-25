@@ -133,5 +133,6 @@ djcelery.setup_loader()
 BROKER_URL = 'django://'
 # Tasks will be executed asynchronously.
 CELERY_ALWAYS_EAGER = False
-CELERY_RESULT_BACKEND = 'db+postgresql://django:django@localhost/django'
+# CELERY_RESULT_BACKEND = 'db+postgresql://django:django@localhost/django'
+CELERY_RESULT_BACKEND = 'db+sqlite:///djcelery.db'
 
