@@ -1,4 +1,4 @@
-from open_multi_stack.models import Account
+from open_multi_stack.models import Account, Instance
 from django.contrib import admin
 
 class AccountAdmin(admin.ModelAdmin):
@@ -7,5 +7,5 @@ class AccountAdmin(admin.ModelAdmin):
     list_display = ('provider', 'username', 'tenantname', 'tenant_id')
 
 admin.site.register(Account, AccountAdmin)
-
+admin.site.register(Instance)
 
