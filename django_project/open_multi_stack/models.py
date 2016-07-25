@@ -33,3 +33,23 @@ class Instance(models.Model):
     def __str__(self):
         return self.name + '_' + self.ip_addr 
 
+class Queue(models.Model):
+    regist_datetime = models.DateTimeField(auto_now_add=True)
+    STATUS_QUEUEING = "queueing"
+    STATUS_BOOTING  = "booting"
+    STATUS_RUNNING  = "running"
+    STATUS_DESTROYING  = "destroying"
+    STATUS_FAILED   = "failed"
+    STATUS_SET = (
+            (STATUS_QUEUEING, "queueing"),
+            (STATUS_BOOTING,  "booting"),
+            (STATUS_RUNNING,  "running"),
+            (STATUS_DESTROYING,  "destroying"),
+            (STATUS_FAILED,   "failed"),
+    )
+    status = models.CharField(choices=STATUS_SET, default=STATUS_QUEUEING, max_length=12)
+    instance = models.ForeignKey(Instance, null=True)
+
+    def __str__(self):
+        return self.regist_date + '_' + self.status
+
