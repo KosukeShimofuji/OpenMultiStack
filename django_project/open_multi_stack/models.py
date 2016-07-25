@@ -12,12 +12,21 @@ class Account(models.Model):
     STATUS_AVAILABLE = "available"
     STATUS_UNAVAILABLE = "unavailable"
     STATUS_SET = (
-            (STATUS_AVAILABLE, "使用可能"),
-            (STATUS_UNAVAILABLE, "使用不可"),
+            (STATUS_AVAILABLE, "available"),
+            (STATUS_UNAVAILABLE, "unavailable"),
     )
     status = models.CharField(choices=STATUS_SET, default=STATUS_AVAILABLE, max_length=12)
     provider    = models.CharField(max_length=128)
 
     def __str__(self):
         return self.tenantname + '_' + self.provider
+
+class Instance(models.Model):
+    name    = models.CharField(max_length=128)
+    ip      = models.CharField(max_length=128)
+    key     = models.CharField(max_length=128)
+    account = models.ForeignKey(Account)
+
+    def __str__(self):
+        return self.name + '_' + self.ip + '_' + self.account
 
