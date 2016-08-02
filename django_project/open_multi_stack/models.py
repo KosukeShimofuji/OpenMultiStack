@@ -1,6 +1,6 @@
 from django.db import models
 from django.db.models.signals import post_save
-from .reciver import test
+from .reciver import post_save_queue_table
 
 # Create your models here.
 
@@ -55,5 +55,5 @@ class Queue(models.Model):
     def __str__(self):
         return self.regist_date + '_' + self.status
 
-post_save.connect(test, sender=Queue)
+post_save.connect(post_save_queue_table, sender=Queue)
 
