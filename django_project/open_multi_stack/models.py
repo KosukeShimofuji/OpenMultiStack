@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.signals import post_save
 from .reciver import post_save_queue_table
+from datetime import datetime
 
 # Create your models here.
 
@@ -53,7 +54,7 @@ class Queue(models.Model):
     instance = models.ForeignKey(Instance, null=True)
 
     def __str__(self):
-        return self.regist_date + '_' + self.status
-
+        return self.regist_datetime.strftime('%Y-%m-%d %H:%M') + '_' + self.status
+    
 post_save.connect(post_save_queue_table, sender=Queue)
 
