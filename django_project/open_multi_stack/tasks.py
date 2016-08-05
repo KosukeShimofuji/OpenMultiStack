@@ -82,3 +82,19 @@ def create_openstack_instance(queue_id):
            # update queue record status (FAILED)
             queue_record.status = Queue.STATUS_FAILED
             queue_record.save()
+
+@task
+
+def delete_openstack_instance(queue_id):
+    from open_multi_stack.models import Account, Instance, Queue
+    queue_record = Queue.objects.get(id=queue_id)
+    instance_record = queue_record.instance
+
+    if instance_record is None:
+        return
+
+    nova_client.servers.delete(instance_record.name) 
+    nova_client.keypairs.delete(instance_record.key_name)
+    
+    instance_record.delete()
+

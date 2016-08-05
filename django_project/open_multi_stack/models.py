@@ -1,6 +1,6 @@
 from django.db import models
-from django.db.models.signals import post_save
-from .reciver import post_save_queue_table
+from django.db.models.signals import post_save, post_delete
+from .reciver import post_save_queue_table, pre_delete_queue_table
 from datetime import datetime
 
 class Account(models.Model):
@@ -58,4 +58,5 @@ class Queue(models.Model):
         return self.regist_datetime.strftime('%Y-%m-%d %H:%M') + '_' + self.status
     
 post_save.connect(post_save_queue_table, sender=Queue)
+pre_delete.connect(post_delete_queue_table, sender=Queue)
 
