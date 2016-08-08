@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, pre_delete
 from .reciver import post_save_queue_table, pre_delete_queue_table
 from datetime import datetime
 
@@ -25,12 +25,13 @@ class Account(models.Model):
         return  self.provider + '_' + self.region_name + '_' + self.tenant_name 
 
 class Instance(models.Model):
-    name        = models.CharField(max_length=128)
-    ip_addr     = models.CharField(max_length=128)
-    key_name    = models.CharField(max_length=128)
-    key_raw     = models.TextField(blank=True, null=False)
+    instance_id     = models.CharField(max_length=128)
+    name            = models.CharField(max_length=128)
+    ip_addr         = models.CharField(max_length=128)
+    key_name        = models.CharField(max_length=128)
+    key_raw         = models.TextField(blank=True, null=False)
     regist_datetime = models.DateTimeField(auto_now_add=True)
-    account     = models.ForeignKey(Account)
+    account         = models.ForeignKey(Account)
 
     def __str__(self):
         return self.name + '_' + self.ip_addr 
@@ -58,5 +59,5 @@ class Queue(models.Model):
         return self.regist_datetime.strftime('%Y-%m-%d %H:%M') + '_' + self.status
     
 post_save.connect(post_save_queue_table, sender=Queue)
-pre_delete.connect(post_delete_queue_table, sender=Queue)
+pre_delete.connect(pre_delete_queue_table, sender=Queue)
 

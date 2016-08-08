@@ -22,9 +22,8 @@ def get_nova_credentials(account):
 
 @task
 
-def create_openstack_instance(queue_id):
+def create_openstack_instance(queue_record):
     from open_multi_stack.models import Account, Instance, Queue
-    queue_record = Queue.objects.get(id=queue_id)
 
     if queue_record.status != Queue.STATUS_REQUEST:
         return
@@ -64,17 +63,18 @@ def create_openstack_instance(queue_id):
             queue_record.save()
             
             # insert instance record
-            q = Instance(
+            instance_record = Instance(
+                instance_id= instance.id,
                 name=instance.name,
                 ip_addr = instance.interface_list()[0].fixed_ips[0]['ip_address'],
                 key_name = key_name,
                 key_raw = keypair.private_key,
                 account=account
             )
-            q.save()
+            instance_record.save()
             
             # relate instance record and queue record
-            queue_record.instance = q
+            queue_record.instance =instance_record
             queue_record.save()
             break
         except (nova_exceptions.BadRequest, nova_exceptions.Forbidden) as ex:
@@ -85,16 +85,19 @@ def create_openstack_instance(queue_id):
 
 @task
 
-def delete_openstack_instance(queue_id):
+def delete_openstack_instance(queue_record):
     from open_multi_stack.models import Account, Instance, Queue
-    queue_record = Queue.objects.get(id=queue_id)
     instance_record = queue_record.instance
 
     if instance_record is None:
         return
 
-    nova_client.servers.delete(instance_record.name) 
+    account_record = instance_record.account
+
+    credentials = get_nova_credentials(account_record)
+    nova_client = Client(**credentials)
+    nova_client.servers.delete(instance_record.instance_id) 
     nova_client.keypairs.delete(instance_record.key_name)
-    
     instance_record.delete()
+
 
