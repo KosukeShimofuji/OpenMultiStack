@@ -58,10 +58,7 @@ def create_openstack_instance(queue_record):
                 # Retrieve the instance again so the status field updates
                 instance = nova_client.servers.get(instance.id)
                 status = instance.status
-            # update queue record status (RUN)
-            queue_record.status = Queue.STATUS_RUN
-            queue_record.save()
-            
+           
             # insert instance record
             instance_record = Instance(
                 instance_id= instance.id,
@@ -76,6 +73,11 @@ def create_openstack_instance(queue_record):
             # relate instance record and queue record
             queue_record.instance =instance_record
             queue_record.save()
+
+            # update queue record status (RUN)
+            queue_record.status = Queue.STATUS_RUN
+            queue_record.save()
+ 
             break
         except (nova_exceptions.BadRequest, nova_exceptions.Forbidden) as ex:
             logger.info(ex.message)
