@@ -1,5 +1,145 @@
 # OpenMultiStack
 
+OpenMultiStackは複数のOpenStack Providerをまたがってcomptue nodeの作成や破棄といった操作と管理を一元化するために作成しました。
+
+# Deploy
+
+ * 検証環境の作成
+
+```
+$ cd OpenMultiStack/ansible
+$ vagrant up
+$ ansible-playbook -i development site.yml
+```
+
+ * デプロイ用のディレクトリを作成
+
+```
+# mkdir -p /var/www/
+# cd /var/www/
+# git clone git@github.com:KosukeShimofuji/OpenMultiStack.git
+# cd OpenMultiStack
+```
+
+ * pyenvのインストール
+
+```
+# git clone https://github.com/yyuu/pyenv.git /var/www/OpenMultiStack/.pyenv
+# cat ~/.bash_profile
+export PYENV_ROOT=/var/www/OpenMultiStack/.pyenv
+export PATH=$PYENV_ROOT/bin:$PATH
+eval "$(pyenv init -)"
+```
+
+ * Python 3.5.1のインストール
+
+```
+# CFLAGS="-fPIC" pyenv install 3.5.1
+# pyenv global 3.5.1
+```
+
+ * Pythonモジュールのインストール
+
+```
+# pip install --upgrade pip
+# pip install django
+# pip install psycopg2 # djangoからpostgresqlを操作するために必要
+# pip install djangorestframework
+# pip install django-filter 
+# pip install python-openstackclient
+# pip install python-neutronclient
+# pip install celery
+# pip install django-celery
+# pip install sqlalchemy
+```
+
+ * モデルのマイグレート
+
+```
+# python manage.py makemigrations open_multi_stack
+# python manage.py migrate
+```
+
+ * django test serverの起動
+
+```
+$ python manage.py runserver 0.0.0.0:8000
+```
+
+ * celery serverの起動
+
+```
+# celery -A django_project worker -l info -c 1
+```
+
+ * 管理ユーザの作成
+
+```
+# python manage.py createsuperuser
+Username (leave blank to use 'kosuke'): kosuke
+Email address: kosuke.shimofuji@gmail.com
+Password:
+Password (again):
+Superuser created successfully.
+```
+
+ * mod_wsgiのインストール
+
+```
+# apt-get install apache2-dev
+# wget https://pypi.python.org/packages/c3/4e/f9bd165369642344e8fdbe78c7e820143f73d3beabfba71365f27ee5e4d3/mod_wsgi-4.5.3.tar.gz
+# tar zxvf mod_wsgi-4.5.3.tar.gz
+# cd mod_wsgi-4.5.3
+# ./configure --with-python=/var/www/OpenMultiStack/.pyenv/versions/3.5.1/bin/python
+#  make
+#  make install
+# cat /etc/apache2/mods-available/wsgi.load
+LoadModule wsgi_module /usr/lib/apache2/modules/mod_wsgi.so
+# a2enmod wsgi
+```
+
+ * Apache用の設定ファイルを用意する。 
+
+/etc/apache2/sites-available/open_multi_stack.conf
+
+```
+WSGISocketPrefix /var/run/wsgi
+
+<VirtualHost *:80>
+
+  ServerName   oms.test
+
+  WSGIScriptReloading On
+  WSGIDaemonProcess  oms.test python-path=/var/www/OpenMultiStack/django_project:/var/www/OpenMultiStack/.pyenv/versions/3.5.1/lib/python3.5/site-packages python-home=/var/www/OpenMultiStack/.pyenv/versions/3.5.1 user=www-data group=www-data processes=2 threads=25
+  WSGIProcessGroup oms.test
+  WSGIScriptAlias    / /var/www/OpenMultiStack/django_project/django_project/wsgi.py
+
+  Alias /static/ /var/www/OpenMultiStack/static/
+
+  <Directory /var/www/OpenMultiStack/static>
+  Order deny,allow
+  Allow from all
+  </Directory>
+
+  <Directory "/var/www/OpenMultiStack/django_project/django_project">
+  <Files wsgi.py>
+        Require all granted
+  </Files>
+  </Directory>
+
+  ErrorLog /var/log/apache2/django-error.log
+  CustomLog /var/log/apache2/django-access.log combined
+
+</VirtualHost>
+```
+
+ * 静的ファイルをを集める。
+
+```
+python manage.py collectstatic
+```
+
+
 ## Issue
 
  * 著名なOpenStackプロバイダは1リージョンにつき20インスタンスまでの制限が存在する
@@ -215,4 +355,6 @@ http://openmultistack.test:8000/admin/
  * http://docs.openstack.org/ja/api/quick-start/content/index.html#authenticate
  * http://qiita.com/kimihiro_n/items/86e0a9e619720e57ecd8
  * http://docs.openstack.org/ja/user-guide/sdk.html
-
+ * http://unching-star.hatenablog.jp/entry/2015/12/02/113459#f-58c78a61
+ * https://www.digitalocean.com/community/tutorials/how-to-run-django-with-mod_wsgi-and-apache-with-a-virtualenv-python-environment-on-a-debian-vps
+ * http://hideharaaws.hatenablog.com/entry/2014/12/12/230825
