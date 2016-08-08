@@ -1,7 +1,10 @@
 from datetime import datetime
+from time import sleep
+from open_multi_stack.tasks import create_openstack_instance, delete_openstack_instance
 
-def test(sender, instance, **kwargs):
-    f = open("/tmp/test.txt", "a")
-    f.writelines("test " + datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' ' + str(instance.id) + "\n")
-    f.close()
+def post_save_queue_table(sender, instance, **kwargs):
+    create_openstack_instance.delay(instance)
+
+def pre_delete_queue_table(sender, instance, **kwargs):
+    delete_openstack_instance.delay(instance)
 
