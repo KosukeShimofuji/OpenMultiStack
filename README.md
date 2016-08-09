@@ -8,7 +8,7 @@ OpenMultiStackは複数のOpenStack Providerをまたがってcomptue nodeの作
  * いずれかのOpenStack Providerにメンテナンスや不具合があったとしても他のOpenStack Providerを使って可能な限り確実にインスタンスを立ち上げるように努力する
  * クライアントとの通信はRESTful APIで行う
 
-# 検証環境のDEPLOY
+# 検証環境のデプロイ
 
  * 検証環境の作成
 
@@ -215,6 +215,34 @@ CELERY_CREATE_DIRS=1
 ```
 # a2ensite open_multi_stack
 # /etc/init.d/apache2 start
+```
+
+# 使い方
+
+## OpenStackアカウントの追加
+
+管理画面(http://oms.test/admin/)にログインしてAccountテーブルにOpenStackのアカウントを追加します。
+
+## インスタンス立ち上げ命令
+
+```
+$ curl -X POST http://oms.test/api/queues/
+{"id":1,"status":"REQUEST","regist_datetime":"2016-08-09T02:29:34.461432Z","instance":null}
+```
+
+## インスタンス立ち上げ命令の進捗
+
+```
+$ curl -X GET http://oms.test/api/queues/1/
+{"id":1,"status":"RUN","regist_datetime":"2016-08-09T02:29:34.461432Z","instance":{"id":1,"name":"133-130-111-194","instance_id":"bec7c0ea-2262-4d73-aa6d-002d1e231103","ip_addr":"133.130.111.194","key_name":"gShakAACHA","key_raw":"-----BEGIN RSA PRIVATE KEY-----\nMIIEowIBAAKCAQEA2KfxQQDKJ6jE6SofdMWJGLTng4Bk2mPZH0tyke3nimphJbcK\nONEKCGWga87eiqhX4xFRz1xDp8w4tESB8pfy1y4a+FlCHiE5H/XaTFjDgbZs9WJ1\n+B4gjIQZT2TROCpGsyTCbnKmwI+cyTanFGskwye6Tcw7JvBF7l9oL8psX6McxNIm\njGZknPpHZZWvLJ0zpq9zCbnJgPbiUOuD64N5hYRGE293CsXkDWUy6YEPtgKU85/Y\nqbN9CQIzxd0WlAkKYT+A5Ri2G1tnOTqEiBRKAevftaQ/pxkHIkKk2Y6IT+7UNrGX\n3Dnc5Gl13640SNeFsdgOx6GXPAauZtaEGFh8sQIDAQABAoIBAQDTlpCirya+vLAy\nFpVJ8XEG1AYWA1p7fnAZhBGMOw+ZunLN5ojxHBX0RWv6XboxKF9Mvylqnezk/ymR\nxCY0yfi79acZS/Kqgj/L2ssrLLUjBQo8S8ByZNnc4VXml8tMUt1hL1FDlG0OOjMg\nv2NFKa5peW8Vc5OBX76sIjkaE1LrwhAfiLWYBd4Iv90LvmU7i69dCXSaZxTtkzJs\nb5zMrJR36GyUhCvlrbPnYpZ+knEM2DmRYm8zqrUDDGxaXjI+eIDceBnAT4TWfiJz\nGXnMxLi4ljJ01b+1FmLCZ89FqxmFuWoW820kEQDmCFriXUr3r7cAFIoZc3Vj/S8I\nBLMSg9/BAoGBAPlpWrwfRA/pOpS5bVqFTvRaTTM3UrgZfWY67plo44ERFN5gPwsS\nKK6pT5oOiVxHPdCDUZXABHxoz+nRA/5qR+oBHPZEU+Cv0hvUMryaZo3jVoWvg1M7\nRBv0J8xowjWuOr07OeAiwY04RkCUlm42Zdong8Docw/+dbIW5FWrhNblAoGBAN5h\nFCtfDqC8JAU+sdJ6WERZ5lCCaKup90TTqfjogEGFMtS2oDyz5FmLWhjoHXGt/deV\nQ21+ZxWPukx9NpspBgE80j/pOShmGcswkempTgnzCdgdraYHv+WHfzuEOjkgPmr5\nv+u5KEveVl6LO24fIvG6kXGS2CNosHm9WSeQjoXdAoGAVHd0ri9cipLvLv0ZZsWs\n9p46dPTwg77GNEATHEtkeQqC6cjosOQmePiIJ+FybZkG+z3t/Gw6WLPabhJGavwt\nfLeBynlbesWwv5H+2NblknoCjGXjcOWqbFkkvVphI3LtG7caI6lBqYT8bdSkmZC8\nr8QgH83ZYfpIe9a637Sl2W0CgYBs3tA2D5qkvJdR7gi2x+jwxaaJId9Gs7Z3/rxH\nPOSVrzVciHBYZ6XS5PNeID1SC2GsKspRD8I9/xixG9ghDGuBLZqtaWvvSFU2cfft\nklK/cjoOkTETiNW89KIorCqpDw0f6Fe6evKsehSEwtt8pUfBWpqcJM0mQLmtUDMW\nuKHeDQKBgDMERcBoMU+tg6ByVp8Bk96Q91EJNVfK3i6M4/XDFBWJIelCESu0RXbb\nOSmxwX7UK2CF+Roj2/h5OlwvF9Rjy5nVsGaB/oSBAGaHFwgpHEWoqyEK1hbVIV1B\ns4OJDA7iMZ2Q9oRvXH8UHks83pnlcYCPAyqH3ZS8wFuUow6t7k8d\n-----END RSA PRIVATE KEY-----\n","account":{"provider":"conoha","region_name":"tyo1","tenant_name":"gnct26543406"}}}
+```
+
+## インスタンスの破棄命令
+
+```
+$ curl -X DELETE http://oms.test/api/queues/1/
+$ curl -X GET http://oms.test/api/queues/1/
+{"detail":"Not found."}kosukeshimofuji@PMAC280S ~ $
 ```
 
 
