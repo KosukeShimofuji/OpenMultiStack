@@ -1,5 +1,5 @@
 ---
-hostname: 'OpenMultiStack.test'
+hostname: 'OMS.test'
 ansible_user: vagrant
 login_user: "kosuke"
 
