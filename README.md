@@ -244,7 +244,7 @@ $ curl -X GET http://oms.test/api/queues/1/
 ```
 $ curl -X DELETE http://oms.test/api/queues/1/
 $ curl -X GET http://oms.test/api/queues/1/
-{"detail":"Not found."}kosukeshimofuji@PMAC280S ~ $
+{"detail":"Not found."}
 ```
 
 
