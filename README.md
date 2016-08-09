@@ -223,7 +223,7 @@ CELERY_CREATE_DIRS=1
 
 [管理画面](http://hostname/admin/)にログインしてAccountテーブルにOpenStackのアカウントを追加します。
 
-![add account](https://raw.githubusercontent.com/KosukeShimofuji/OpenMultiStack/image/add_acount.png)
+![django admin index](https://raw.githubusercontent.com/KosukeShimofuji/OpenMultiStack/image/django_admin_index.png)
 
 ## インスタンス立ち上げ命令
 
