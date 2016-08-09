@@ -221,7 +221,9 @@ CELERY_CREATE_DIRS=1
 
 ## OpenStackアカウントの追加
 
-管理画面(http://oms.test/admin/)にログインしてAccountテーブルにOpenStackのアカウントを追加します。
+[管理画面](http://hostname/admin/)にログインしてAccountテーブルにOpenStackのアカウントを追加します。
+
+![add account](https://raw.githubusercontent.com/KosukeShimofuji/OpenMultiStack/image/add_acount.png)
 
 ## インスタンス立ち上げ命令
 
