@@ -1,8 +1,14 @@
 # OpenMultiStack
 
-OpenMultiStackは複数のOpenStack Providerをまたがってcomptue nodeの作成や破棄といった操作と管理を一元化するために作成しました。
+OpenMultiStackは複数のOpenStack Providerをまたがってcomptue nodeの作成や破棄といった操作と管理を一元化するために作成しました。OpenMultiStackには次のような機能が実装されています。
 
-# Deploy
+ * OpenStackアカウントの集約
+ * WebインターフェイスからOpenStack Providerのアカウント登録できる
+ * Webインターフェイスからインスタンス情報の一覧を見ることができる
+ * いずれかのOpenStack Providerにメンテナンスや不具合があったとしても他のOpenStack Providerを使って可能な限り確実にインスタンスを立ち上げるように努力する
+ * クライアントとの通信はRESTful APIで行う
+
+# 検証環境のDEPLOY
 
  * 検証環境の作成
 
@@ -12,21 +18,21 @@ $ vagrant up
 $ ansible-playbook -i development site.yml
 ```
 
- * デプロイ用のディレクトリを作成
+ * デプロイ用の構成を作成
 
 ```
-# mkdir -p /var/www/
-# cd /var/www/
-# git clone git@github.com:KosukeShimofuji/OpenMultiStack.git
-# cd OpenMultiStack
+$ sudo mkdir -p /var/www/OpenMultiStack/
+$ cd ~/
+$ git clone git@github.com:KosukeShimofuji/OpenMultiStack.git
+$ cd OpenMultiStack
 ```
 
  * pyenvのインストール
 
 ```
-# git clone https://github.com/yyuu/pyenv.git /var/www/OpenMultiStack/.pyenv
-# cat ~/.bash_profile
-export PYENV_ROOT=/var/www/OpenMultiStack/.pyenv
+$ git clone https://github.com/yyuu/pyenv.git ~/.pyenv
+$ cat ~/.bash_profile
+export PYENV_ROOT=/home/kosuke/.pyenv
 export PATH=$PYENV_ROOT/bin:$PATH
 eval "$(pyenv init -)"
 ```
@@ -34,30 +40,31 @@ eval "$(pyenv init -)"
  * Python 3.5.1のインストール
 
 ```
-# CFLAGS="-fPIC" pyenv install 3.5.1
-# pyenv global 3.5.1
+$ CFLAGS="-fPIC" pyenv install 3.5.1
+$ pyenv global 3.5.1
 ```
 
  * Pythonモジュールのインストール
 
 ```
-# pip install --upgrade pip
-# pip install django
-# pip install psycopg2 # djangoからpostgresqlを操作するために必要
-# pip install djangorestframework
-# pip install django-filter 
-# pip install python-openstackclient
-# pip install python-neutronclient
-# pip install celery
-# pip install django-celery
-# pip install sqlalchemy
+$ pip install --upgrade pip
+$ pip install django
+$ pip install psycopg2 # djangoからpostgresqlを操作するために必要
+$ pip install djangorestframework
+$ pip install django-filter 
+$ pip install python-openstackclient
+$ pip install python-neutronclient
+$ pip install celery
+$ pip install django-celery
+$ pip install sqlalchemy
 ```
 
  * モデルのマイグレート
 
 ```
-# python manage.py makemigrations open_multi_stack
-# python manage.py migrate
+$ cd OpenMultiStack/django_project/
+$ python manage.py makemigrations open_multi_stack
+$ python manage.py migrate
 ```
 
  * django test serverの起動
@@ -69,13 +76,13 @@ $ python manage.py runserver 0.0.0.0:8000
  * celery serverの起動
 
 ```
-# celery -A django_project worker -l info -c 1
+$ celery -A django_project worker -l info -c 1
 ```
 
  * 管理ユーザの作成
 
 ```
-# python manage.py createsuperuser
+$ python manage.py createsuperuser
 Username (leave blank to use 'kosuke'): kosuke
 Email address: kosuke.shimofuji@gmail.com
 Password:
@@ -86,16 +93,17 @@ Superuser created successfully.
  * mod_wsgiのインストール
 
 ```
-# apt-get install apache2-dev
-# wget https://pypi.python.org/packages/c3/4e/f9bd165369642344e8fdbe78c7e820143f73d3beabfba71365f27ee5e4d3/mod_wsgi-4.5.3.tar.gz
-# tar zxvf mod_wsgi-4.5.3.tar.gz
-# cd mod_wsgi-4.5.3
-# ./configure --with-python=/var/www/OpenMultiStack/.pyenv/versions/3.5.1/bin/python
-#  make
-#  make install
-# cat /etc/apache2/mods-available/wsgi.load
+$ sudo apt-get install apache2-dev
+$ wget https://pypi.python.org/packages/c3/4e/f9bd165369642344e8fdbe78c7e820143f73d3beabfba71365f27ee5e4d3/mod_wsgi-4.5.3.tar.gz
+$ tar zxvf mod_wsgi-4.5.3.tar.gz
+$ cd mod_wsgi-4.5.3
+$ ./configure --with-python=/home/kosuke/.pyenv/versions/3.5.1/bin/python
+$ make
+$ sudo make install
+$ sudo sh -c 'cat > /etc/apache2/mods-available/wsgi.load'
 LoadModule wsgi_module /usr/lib/apache2/modules/mod_wsgi.so
-# a2enmod wsgi
+CTRL+C
+$ sudo a2enmod wsgi
 ```
 
  * Apache用の設定ファイルを用意する。 
@@ -110,9 +118,9 @@ WSGISocketPrefix /var/run/wsgi
   ServerName   oms.test
 
   WSGIScriptReloading On
-  WSGIDaemonProcess  oms.test python-path=/var/www/OpenMultiStack/django_project:/var/www/OpenMultiStack/.pyenv/versions/3.5.1/lib/python3.5/site-packages python-home=/var/www/OpenMultiStack/.pyenv/versions/3.5.1 user=www-data group=www-data processes=2 threads=25
+  WSGIDaemonProcess  oms.test python-path=/home/kosuke/OpenMultiStack/django_project:/home/kosuke/OpenMultiStack/.pyenv/versions/3.5.1/lib/python3.5/site-packages python-home=/home/kosuke/.pyenv/versions/3.5.1 user=www-data group=www-data processes=2 threads=25
   WSGIProcessGroup oms.test
-  WSGIScriptAlias    / /var/www/OpenMultiStack/django_project/django_project/wsgi.py
+  WSGIScriptAlias    / /home/kosuke/OpenMultiStack/django_project/django_project/wsgi.py
 
   Alias /static/ /var/www/OpenMultiStack/static/
 
@@ -121,7 +129,7 @@ WSGISocketPrefix /var/run/wsgi
   Allow from all
   </Directory>
 
-  <Directory "/var/www/OpenMultiStack/django_project/django_project">
+  <Directory "/home/kosuke/OpenMultiStack/django_project/django_project">
   <Files wsgi.py>
         Require all granted
   </Files>
